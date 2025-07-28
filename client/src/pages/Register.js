@@ -1,0 +1,75 @@
+import React, { useState } from "react";
+import API from "../api/axios";
+import { useNavigate, Link } from "react-router-dom";
+
+const Register = () => {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await API.post("/auth/register", { username, email, password });
+      navigate("/login");
+    } catch (err) {
+      setError("Registration failed. Try again.");
+    }
+  };
+
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-green-400 to-emerald-600">
+      <div className="bg-white rounded-xl shadow-lg p-8 w-96">
+        <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">
+          📝 Register
+        </h2>
+
+        {error && <p className="text-red-500 text-center mb-3">{error}</p>}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            type="text"
+            placeholder="Username"
+            className="w-full p-3 border rounded-lg focus:outline-none focus:border-green-500"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            className="w-full p-3 border rounded-lg focus:outline-none focus:border-green-500"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            className="w-full p-3 border rounded-lg focus:outline-none focus:border-green-500"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button
+            type="submit"
+            className="w-full bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 transition"
+          >
+            Register
+          </button>
+        </form>
+
+        <p className="mt-4 text-center text-gray-600">
+          Already have an account?{" "}
+          <Link to="/login" className="text-green-600 hover:underline">
+            Login
+          </Link>
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default Register;
